@@ -1,0 +1,84 @@
+﻿body {
+    background-color: #ffffff;
+}
+
+h1 {
+    color: blue;
+}
+
+p {
+    color: red;
+}
+
+table.main {
+    margin: 0px;
+    font-size: 18px;
+    border-collapse: collapse;
+    table-layout: fixed;
+    width: 100%;
+    page-break-inside: avoid;
+}
+
+table.backgroundinthebox {
+    margin: 2px;
+    border-collapse: collapse;
+    page-break-inside: avoid;
+}
+
+    table.backgroundinthebox td {
+        background-color: #FFFFFF;
+        padding: 0;
+        width: 18px;
+        height: 18px;
+        border: 1px solid #CBF6FF;
+        page-break-inside: avoid;
+    }
+
+table.main tr {
+}
+
+    table.main tr td {
+        padding: 2px;
+        border: 0px solid #000000;
+        vertical-align: middle;
+    }
+
+table.mainheader {
+    width: 100%;
+    background-color: #fbfbfb;
+}
+
+    table.mainheader td {
+        text-align: left;
+        vertical-align: middle;
+    }
+
+div.exercise {
+    border: 0px solid;
+    margin: 2px;
+    font-size: 18px;
+    width: 100%;
+    page-break-inside: avoid;
+}
+
+    div.exercise div.exerciseheader {
+        font-size: 18px;
+        page-break-inside: avoid;
+        font-weight: bold;
+        margin: 10px 10px 3px -1px;
+    }
+
+table.incordecby {
+    border-collapse:initial;
+    width:300px;
+}
+
+    table.incordecby tr td {
+        border: 1px solid;
+        font-size: 18px;
+        background-color: #ffffff;
+    }
+
+.clearfix {
+    clear: both;
+}

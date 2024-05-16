@@ -1,0 +1,33 @@
+﻿@page "/elementaryschool"
+@using Educator.Ui.Services
+
+@inject IDocGenService DocGenService
+
+<h3>Начальная школа</h3>
+<label for="numberInput">Количество примеров в упражнении: </label>
+<input id="numberInput" type="text" @bind="NumberInput" />
+<button @onclick="GetDocGenForBinaryMultiplication">Умножение</button>
+
+@if (InputValidationMessage != null)
+{
+    <p>@InputValidationMessage</p>
+}
+
+@code {
+
+    private int NumberInput = 10;
+    private string InputValidationMessage;
+
+    private async Task GetDocGenForBinaryMultiplication()
+    {
+        if (NumberInput < 0)
+        {
+            InputValidationMessage = "Число должно быть положительным";
+        }
+        else
+        {
+            InputValidationMessage = null;
+            await DocGenService.GetMathDocument(NumberInput);
+        }
+    }
+}
