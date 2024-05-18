@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
+	  <UserSecretsId>c0e9bc9a-988f-4f66-83ca-e42d5810d221</UserSecretsId>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>d41cb037-6af2-4567-9624-d8c3f1a83712</UserSecretsId>
@@ -11,12 +12,13 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.4" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.0.4" />
-    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.20.1" />
+	  <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.20.1" />
+	  <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="1.20.1" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Educator.ExcercisesGenerators\Educator.ExercisesGenerators.csproj" />
+    <ProjectReference Include="..\Educator.ExercisesGenerators\Educator.ExercisesGenerators.csproj" />
     <ProjectReference Include="..\Educator.Ui\Educator.Ui.csproj" />
   </ItemGroup>
 

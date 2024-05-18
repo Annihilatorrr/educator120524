@@ -1,4 +1,5 @@
-﻿using Educator.ExercisesGenerators;
+﻿
+using Educator.ExercisesGenerators;
 
 namespace Educator.Api.Registrars;
 
