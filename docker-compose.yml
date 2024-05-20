@@ -1,14 +1,15 @@
+version: '3.4'
+
 services:
   educator.api:
-    image: educatorimage
-    volumes:
-      - ./certificates:/root/.aspnet/https/
-      - ${APPDATA}/microsoft/UserSecrets:/root/.microsoft/usersecrets
+    image: ${DOCKER_REGISTRY-}educatorapi
     container_name: educator.api
     build:
       context: .
       dockerfile: Educator.Api/Dockerfile
-    
+    volumes:
+      - ./certificates:/root/.aspnet/https/
+      - ${APPDATA}/microsoft/UserSecrets:/root/.microsoft/usersecrets
     ports:
       - "8080:80"
       - "8081:443"
@@ -17,4 +18,5 @@ services:
         ASPNETCORE_HTTPS_PORT: "8081"
         ASPNETCORE_ENVIRONMENT: "Development"
         ASPNETCORE_Kestrel__Certificates__Default__Password: 321321
-        ASPNETCORE_Kestrel__Certificates__Default__Path: "/root/.aspnet/https/educator.pfx"
+        ASPNETCORE_Kestrel__Certificates__Default__Path: "/root/.aspnet/https/Educator.Api.pfx"
+

@@ -1,8 +1,5 @@
 ﻿using Educator.ExercisesGenerators;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.FileProviders;
-using org.matheval;
 
 namespace Educator.Api.Controllers
 {

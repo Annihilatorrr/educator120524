@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Educator.ExercisesGenerators
+﻿namespace Educator.ExercisesGenerators
 {
     public record ExpressionResult(string expression, decimal result);
 }

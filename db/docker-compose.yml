@@ -1,0 +1,11 @@
+version: "3.9"
+services:
+  postgresss:
+    image: postgres:16.3-alpine
+    container_name: postgresss
+    environment:
+      POSTGRES_DB: "mytestdb"
+      POSTGRES_USER: "mytestuser"
+      POSTGRES_PASSWORD: "mytestpwd"
+    ports:
+      - "5432:5432"

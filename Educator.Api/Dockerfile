@@ -23,10 +23,10 @@ FROM build as publish
 ARG BUILD_CONFIGURATION=Release
 RUN dotnet publish "Educator.Api.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
-FROM base AS finalll
+FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
 
-RUN mkdir -p /app/certificates
-COPY certificates/educator.pfx /app/certificates
+#RUN mkdir -p /app/certificates
+#COPY certificates/educator.pfx /app/certificates
 ENTRYPOINT ["dotnet", "Educator.Api.dll"]

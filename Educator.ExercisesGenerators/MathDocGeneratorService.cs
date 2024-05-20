@@ -2,7 +2,6 @@
 using System.Text;
 using Educator.ConsoleApp;
 using org.matheval;
-using System.IO;
 using HTMLQuestPDF.Extensions;
 using QuestPDF.Fluent;
 using QuestPDF.Infrastructure;
