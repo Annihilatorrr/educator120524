@@ -1,12 +1,12 @@
 ﻿namespace Educator.ExercisesGenerators
 {
-    public class Exercise
+    public class ExerciseHtmlView
     {
         private string _headerTemplate;
         public string Header { get; set; }
         public string Content { get; set; }
 
-        public Exercise(string headerTemplate)
+        public ExerciseHtmlView(string headerTemplate)
         {
             _headerTemplate = headerTemplate;
         }

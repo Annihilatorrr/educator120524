@@ -10,38 +10,56 @@ namespace Educator.ExercisesGenerators
 {
     public class MathDocGeneratorService : IMathDocGeneratorService
     {
-        public async Task<string> GenerateExpressions(IntegerExpressionConfig config, string exerciseHeaderTemplate)
+        public async Task<HashSet<BinaryExercise>> GenerateExpressions(AlgebraicExpressionGeneratorConfig config,
+            string exerciseHeaderTemplate)
         {
-            List<string> expressions = GetExpressions(config, config.ExpressionsCount);
+            AlgebraicExpressionGenerator generator = new AlgebraicExpressionGenerator(config);
+            var expressions = new HashSet<BinaryExercise>();
 
-            Exercise exercise = new Exercise(exerciseHeaderTemplate)
+            int attempt = 0;
+            while(expressions.Count<config.Count)
             {
-                Header = config.InvisibleOperand ? "Подставь числа" : "Реши примеры",
-                Content = GetContent(expressions, config.Columns)
-            };
-            QuestPDF.Settings.License = LicenseType.Community;
-            Document.Create(container =>
-            {
-                container.Page(page =>
+                var exercise = generator.GenerateExpression();
+                if (!expressions.Add(exercise))
                 {
-                    page.Content().Column(col =>
-                    {
-                        col.Item().HTML(handler =>
-                        {
-                            handler.SetHtml(exercise.Build());
-                        });
-                    });
-                });
-            }).GeneratePdf($"output/educator_{DateTime.Now:yyyy_dd_MM-HH_mm_ss_fff}.pdf");
-            //var generatedPdf = PdfGenerator.GeneratePdf(htmlStringSb.ToString(), PageSize.A4, 10, css);
-            //using var ms = new MemoryStream();
-            //generatedPdf.Save(ms);
-            //Directory.CreateDirectory("output");
-            //await using var fs = File.Create($"output/educator_{DateTime.Now:yyyy_dd_MM-HH_mm_ss_fff}.pdf");
-            //ms.Position = 0;
-            //await ms.CopyToAsync(fs);
+                    ++attempt;
+                }
+                else
+                {
+                    attempt = 0;
+                }
+            }
 
-            return exercise.Build();
+            return expressions;
+            ;
+            //Exercise exercise = new Exercise(exerciseHeaderTemplate)
+            //{
+            //    Header = "Реши примеры",
+            //    Content = GetContent(expressions, config.Columns)
+            //};
+            //QuestPDF.Settings.License = LicenseType.Community;
+            //Document.Create(container =>
+            //{
+            //    container.Page(page =>
+            //    {
+            //        page.Content().Column(col =>
+            //        {
+            //            col.Item().HTML(handler =>
+            //            {
+            //                handler.SetHtml(exercise.Build());
+            //            });
+            //        });
+            //    });
+            //}).GeneratePdf($"output/educator_{DateTime.Now:yyyy_dd_MM-HH_mm_ss_fff}.pdf");
+            ////var generatedPdf = PdfGenerator.GeneratePdf(htmlStringSb.ToString(), PageSize.A4, 10, css);
+            ////using var ms = new MemoryStream();
+            ////generatedPdf.Save(ms);
+            ////Directory.CreateDirectory("output");
+            ////await using var fs = File.Create($"output/educator_{DateTime.Now:yyyy_dd_MM-HH_mm_ss_fff}.pdf");
+            ////ms.Position = 0;
+            ////await ms.CopyToAsync(fs);
+
+            //return exercise.Build();
         }
 
         public async Task<string> GenerateExpressionsMulBy10(IntegerExpressionConfig config, string exerciseHeaderTemplate)
@@ -51,7 +69,7 @@ namespace Educator.ExercisesGenerators
 
             List<string> expressions = GetRoundNumber10Expressions(config, config.ExpressionsCount);
 
-            Exercise exercise = new Exercise(exerciseHeader)
+            ExerciseHtmlView exercise = new ExerciseHtmlView(exerciseHeader)
             {
                 Header = config.InvisibleOperand ? "Подставь числа" : "Реши примеры",
                 Content = GetContent(expressions, config.Columns)
@@ -110,7 +128,7 @@ namespace Educator.ExercisesGenerators
 
             string exerciseHeaderPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? string.Empty, @"HtmlTemplates\TaskHeaderTemplate.html");
             var exerciseHeader = File.ReadAllText(exerciseHeaderPath);
-            Exercise exercise = new Exercise(exerciseHeader)
+            ExerciseHtmlView exercise = new ExerciseHtmlView(exerciseHeader)
             {
                 Header = $"Начерти два отрезка: один длиной {line1Length} см, а другой на {line2Length} см {(less ? "короче" : "длиннее")}",
                 Content = HtmlGenerator.GetBackgroundInTheBox(3, 33)
@@ -143,7 +161,7 @@ namespace Educator.ExercisesGenerators
             string content =
                 HtmlGenerator.GetNumbers(numbersToIncrement, "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;") +
                 HtmlGenerator.GetBackgroundInTheBox(1, 33);
-            Exercise exercise1 = new Exercise(exerciseHeader)
+            ExerciseHtmlView exercise1 = new ExerciseHtmlView(exerciseHeader)
             {
                 Header = $"Увеличь числа на {decBy}",
                 Content = content
@@ -153,7 +171,7 @@ namespace Educator.ExercisesGenerators
                 HtmlGenerator.GetNumbers(numbersToDecrement, "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;") +
                 HtmlGenerator.GetBackgroundInTheBox(1, 33);
 
-            Exercise exercise2 = new Exercise(exerciseHeader)
+            ExerciseHtmlView exercise2 = new ExerciseHtmlView(exerciseHeader)
             {
                 Header = $"Уменьши числа на {incBy}",
                 Content = content
@@ -170,7 +188,7 @@ namespace Educator.ExercisesGenerators
             string exerciseHeaderPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? string.Empty, @"HtmlTemplates\TaskHeaderTemplate.html");
             var exerciseHeader = File.ReadAllText(exerciseHeaderPath);
             var numbers = Enumerable.Range(0, 6).Select(_ => rnd.Next(30)).Distinct().ToList();
-            Exercise exercise = new Exercise(exerciseHeader)
+            ExerciseHtmlView exercise = new ExerciseHtmlView(exerciseHeader)
             {
                 Header = $"Запиши числа в порядке {(asc ? "возрастания" : "убывания")}",
                 Content = HtmlGenerator.GetNumbers(numbers, "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;") +
@@ -192,7 +210,7 @@ namespace Educator.ExercisesGenerators
 
             string exerciseHeaderPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? string.Empty, @"HtmlTemplates\TaskHeaderTemplate.html");
             var exerciseHeader = File.ReadAllText(exerciseHeaderPath);
-            Exercise exercise = new Exercise(exerciseHeader)
+            ExerciseHtmlView exercise = new ExerciseHtmlView(exerciseHeader)
             {
                 Header = "Запиши пропущенные числа в ряду",
                 Content = $"{values},{fillers}, {string.Join(", ", Enumerable.Range(initValue + 5, 3))}, {fillers}, {string.Join(", ", Enumerable.Range(initValue + 10, 3))}"

@@ -1,4 +1,7 @@
-﻿using Educator.ExercisesGenerators;
+﻿using System.Text;
+using Educator.ExercisesGenerators;
+using Educator.Shared.Models.Contracts;
+using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Educator.Api.Controllers
@@ -9,15 +12,16 @@ namespace Educator.Api.Controllers
     {
         private readonly IMathDocGeneratorService _mathDocGenerator;
         private readonly IWebHostEnvironment _hostingEnvironment;
-
-        public MathController(IMathDocGeneratorService mathDocGenerator, IWebHostEnvironment hostingEnvironment)
+        private readonly IDocumentCreator _documentCreator;
+        public MathController(IMathDocGeneratorService mathDocGenerator, IWebHostEnvironment hostingEnvironment, IDocumentCreator documentCreator)
         {
             _mathDocGenerator = mathDocGenerator;
             _hostingEnvironment = hostingEnvironment;
+            _documentCreator = documentCreator;
         }
 
         [HttpGet("elementary/binaryexercises")]
-        public async Task<IActionResult> GetExercise(int numberOfExercises)
+        public async Task<IActionResult> GetExercise([FromQuery] BinaryAlgebraicExpressionRequest expressionsResponse)
         {
             //    var FileProvider = new PhysicalFileProvider(
             //            Path.Combine(Directory.GetCurrentDirectory(), @"MyStaticFiles")),
@@ -27,19 +31,25 @@ namespace Educator.Api.Controllers
             IntegerExpressionConfig config = new IntegerExpressionConfig();
             string filePath = Path.Combine(_hostingEnvironment.ContentRootPath, @"HtmlTemplates\TaskHeaderTemplate.html");
             string content = await System.IO.File.ReadAllTextAsync(filePath);
-            var expressionsContent = await _mathDocGenerator.GenerateExpressions(new IntegerExpressionConfig()
+            var expressionsContent = await _mathDocGenerator.GenerateExpressions(new AlgebraicExpressionGeneratorConfig()
             {
-                ExpressionsCount = 8,
-                AllowedSigns = new List<string>() { "*" },
-                MinOperandValue = 0,
-                MaxOperandValue = 4,
-                MaxResultValue = 100,
-                Columns = 4,
-                InvisibleOperand = false,
-                WithParenthesis = false
+                Count = 8,
+                AllowedOperators = ["*"],
+                MinOperand = 1,
+                MaxOperand = 4,
+                MaxAnswer = 100,
             }, content);
 
-            return Ok(expressionsContent);
+            StringBuilder contentBuilder = new StringBuilder();
+            foreach (var expr in expressionsContent)
+            {
+                contentBuilder.AppendLine($"{expr.FirstOperand} {expr.Operator} {expr.SecondOperand} = ");
+            }
+
+            string fileName = $"educator_{DateTime.Now:yyyy_dd_MM-HH_mm_ss_fff}.pdf";
+            var file = _documentCreator.Save(fileName, contentBuilder.ToString());
+
+            return File(file,"application/pdf", fileName);
         }
     }
 }
